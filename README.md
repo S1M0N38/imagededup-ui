@@ -1,10 +1,10 @@
 <div align="center">
 
-# Python Project Template
+# ImageDedup UI
 
 </div>
 
-A minimal Python project template with automated tooling and development workflows.
+UI for image deduplication.
 
 ## Features
 
@@ -28,8 +28,8 @@ A minimal Python project template with automated tooling and development workflo
 
 ```bash
 # Clone and enter directory
-git clone https://github.com/S1M0N38/template-python.git
-cd template-python
+git clone https://github.com/S1M0N38/imagededup-ui.git
+cd imagededup-ui
 
 # Install all dependencies (creates venv, installs Python 3.13+ if needed)
 make install
@@ -48,7 +48,7 @@ Run `make help` to see all available commands.
 .
 ├── .claude/                 # Claude Code configuration
 ├── .github/workflows/       # CI/CD automation
-├── src/template_python/     # Main package source
+├── src/imagededup_ui/       # Main package source
 ├── tests/                   # Test suite
 ├── Makefile                 # Development commands
 ├── pyproject.toml           # Project configuration

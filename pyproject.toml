@@ -3,9 +3,9 @@ build-backend = "hatchling.build"
 requires = [ "hatchling" ]
 
 [project]
-name = "template-python"
-version = "0.4.0"
-description = "Add your description here"
+name = "imagededup-ui"
+version = "0.0.1"
+description = "UI for image deduplication"
 readme = "README.md"
 authors = [ { name = "S1M0N38", email = "bertolottosimone@gmail.com" } ]
 requires-python = ">=3.13"
@@ -17,11 +17,11 @@ classifiers = [
 ]
 
 dependencies = [  ]
-urls.Changelog = "https://github.com/S1M0N38/template-python/blob/main/CHANGELOG.md"
-urls.Homepage = "https://github.com/S1M0N38/template-python"
-urls.Issues = "https://github.com/S1M0N38/template-python/issues"
-urls.Repository = "https://github.com/S1M0N38/template-python"
-scripts.template-python = "template_python:main"
+urls.Changelog = "https://github.com/S1M0N38/imagededup-ui/blob/main/CHANGELOG.md"
+urls.Homepage = "https://github.com/S1M0N38/imagededup-ui"
+urls.Issues = "https://github.com/S1M0N38/imagededup-ui/issues"
+urls.Repository = "https://github.com/S1M0N38/imagededup-ui"
+scripts.imagededup-ui = "imagededup_ui:main"
 
 [dependency-groups]
 dev = [
