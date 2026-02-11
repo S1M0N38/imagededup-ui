@@ -116,10 +116,12 @@ def save_cache(
     with open(cache / ENCODINGS_FILE, "wb") as f:
         pickle.dump(encodings, f)
 
-    # Convert tuples to lists for JSON serialisation
+    # Convert tuples to lists for JSON serialisation.
+    # Scores from imagededup are numpy float32, which json.dump cannot
+    # handle directly, so we cast each score to a plain Python float.
     json_duplicates: dict[str, list[list]] = {}
     for key, pairs in duplicates.items():
-        json_duplicates[key] = [[name, score] for name, score in pairs]
+        json_duplicates[key] = [[name, float(score)] for name, score in pairs]
 
     with open(cache / DUPLICATES_FILE, "w") as f:
         json.dump(json_duplicates, f)
