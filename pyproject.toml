@@ -4,7 +4,7 @@ requires = [ "hatchling" ]
 
 [project]
 name = "imagededup-ui"
-version = "0.0.1"
+version = "0.1.0"
 description = "UI for image deduplication"
 readme = "README.md"
 authors = [ { name = "S1M0N38", email = "bertolottosimone@gmail.com" } ]
