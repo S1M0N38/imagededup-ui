@@ -120,7 +120,6 @@ def main(argv: list[str] | None = None) -> None:
 
     logger.info("Found %d duplicate sets", len(groups))
 
-    # Import server here to avoid circular imports (server.py is a separate task)
-    from imagededup_ui.server import start_server  # type: ignore[import-not-found]
+    from imagededup_ui.server import start_server
 
     start_server(image_dir, groups, args.port, not args.no_browser)

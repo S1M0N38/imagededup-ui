@@ -40,14 +40,14 @@ class DedupRequestHandler(BaseHTTPRequestHandler):
         if path == "/":
             self._serve_static_file("index.html")
         elif path.startswith("/static/"):
-            rel = path[len("/static/"):]
+            rel = path[len("/static/") :]
             self._serve_static_file(rel)
         elif path == "/api/groups":
             self._handle_api_groups()
         elif path == "/api/discard":
             self._handle_api_discard_get()
         elif path.startswith("/images/"):
-            rel = path[len("/images/"):]
+            rel = path[len("/images/") :]
             self._serve_image(rel)
         else:
             self._send_error(404, "Not found")
@@ -91,7 +91,7 @@ class DedupRequestHandler(BaseHTTPRequestHandler):
         discard = data.get("discard")
 
         if not isinstance(image_path, str) or not isinstance(discard, bool):
-            self._send_error(400, "Expected {\"path\": str, \"discard\": bool}")
+            self._send_error(400, 'Expected {"path": str, "discard": bool}')
             return
 
         discarded: set[str] = self.server.discarded  # type: ignore[attr-defined]
