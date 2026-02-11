@@ -18,6 +18,7 @@ imagededup-ui [options] [path/to/images]
 | `--threshold` | Similarity threshold (varies by method) | Method-specific default |
 | `--force` | Re-analyze all images even if cached | `false` |
 | `--port` | Specific port for HTTP server | Auto-find free port |
+| `--no-browser` | Do not auto-open the browser | `false` |
 
 ### Method-Specific Threshold Defaults
 
@@ -31,10 +32,10 @@ imagededup-ui [options] [path/to/images]
 1. **Analysis Phase**: User runs `imagededup-ui /path/to/images`
 2. **Progress**: CLI shows progress using `tqdm` during image analysis
 3. **Caching**: Results are cached in `.imagededup/` directory for fast resume
-4. **Server Launch**: HTTP server starts on a free port, browser opens automatically
+4. **Server Launch**: HTTP server starts on a free port; unless `--no-browser` is set, the default browser opens automatically. The URL is always printed to the terminal
 5. **Review**: User reviews duplicate sets in the browser and marks images to discard
 6. **Live Update**: Discard list is continuously updated in `.imagededup.txt`
-7. **Exit**: User kills the CLI process to stop the server
+7. **Exit**: User presses Ctrl+C. No special cleanup needed — the discard list is written to disk on every change
 
 ## File Structure
 
@@ -58,6 +59,10 @@ subdir/photo1.jpg
 vacation photo.png
 assets/banner.webp
 ```
+
+On server start, if `.imagededup.txt` already exists, its entries are loaded and those images appear pre-marked as discarded in the UI. Users can unmark them.
+
+> **Note**: This tool does not delete or move any files. The `.imagededup.txt` file is a plain-text list for the user to act on manually (e.g., via `xargs rm < .imagededup.txt`).
 
 ## Analysis Behavior
 
@@ -100,8 +105,15 @@ The `imagededup` library returns a per-image adjacency dict (symmetric: if A→B
 - Filename
 - File size
 - Resolution
-- Path relative to base directory
+- Path: full relative path from base directory (e.g., `vacation/2024/beach/photo.jpg`)
 - Similarity score (normalized to 0–100% scale; hashing: `(64 - distance) / 64 × 100`, CNN: `(similarity + 1) / 2 × 100`)
+
+### Similarity Score Display
+
+Each image in a duplicate set shows its **maximum similarity score to any other image in the same set**. For example, if A~B (95%) and B~C (80%):
+- A shows 95% (its score with B)
+- B shows 95% (its score with A)
+- C shows 80% (its score with B)
 
 ### Interactions
 
@@ -115,8 +127,90 @@ The `imagededup` library returns a per-image adjacency dict (symmetric: if A→B
 ### UI Framework
 
 - **Backend**: Python built-in `http.server`
-- **Frontend**: Lightweight JS framework via CDN (e.g., Alpine.js or petite-vue) OR vanilla JS
+- **Frontend**: Alpine.js via CDN (~17KB, declarative reactive attributes)
 - **No build step required**
+
+## HTTP API
+
+All API routes are served by the Python `http.server` instance.
+
+### Routes
+
+| Method | Route | Description |
+|--------|-------|-------------|
+| `GET` | `/` | Serve `index.html` |
+| `GET` | `/static/<file>` | Serve static assets (`style.css`, `app.js`) |
+| `GET` | `/api/groups` | Return all duplicate groups with metadata |
+| `GET` | `/api/discard` | Return current discard list |
+| `POST` | `/api/discard` | Update discard list (add/remove entries) |
+| `GET` | `/images/<path>` | Serve an image file from the target directory |
+
+### `GET /api/groups`
+
+Returns all duplicate sets with per-image metadata.
+
+**Response** `200 OK`:
+```json
+{
+  "groups": [
+    {
+      "id": 0,
+      "images": [
+        {
+          "path": "vacation/photo1.jpg",
+          "filename": "photo1.jpg",
+          "size_bytes": 245760,
+          "width": 1920,
+          "height": 1080,
+          "score": 97.5
+        }
+      ]
+    }
+  ],
+  "total_groups": 42
+}
+```
+
+- `score`: Normalized similarity (0–100%) — max score to any other image in the set.
+- `path`: Relative to the base image directory.
+- Groups ordered by size descending, then alphabetically by first filename.
+
+### `GET /api/discard`
+
+**Response** `200 OK`:
+```json
+{
+  "discarded": ["vacation/photo1.jpg", "assets/banner.webp"]
+}
+```
+
+### `POST /api/discard`
+
+Toggle an image's discard status.
+
+**Request**:
+```json
+{
+  "path": "vacation/photo1.jpg",
+  "discard": true
+}
+```
+
+**Response** `200 OK`:
+```json
+{
+  "discarded": ["vacation/photo1.jpg", "assets/banner.webp"]
+}
+```
+
+Returns the full updated discard list. The server writes `.imagededup.txt` to disk on every change.
+
+### `GET /images/<path>`
+
+Serves the raw image file from the target directory. `<path>` is URL-encoded, relative to the base image directory. Returns the image with the appropriate `Content-Type` header.
+
+**Error** `404 Not Found` if the file doesn't exist.
+**Error** `403 Forbidden` if the path escapes the base directory (path traversal protection).
 
 ## Edge Cases
 
