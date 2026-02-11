@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>imagededup</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Space+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+<body>
+
+<div id="app" x-data="dedupApp()" x-init="init()">
+
+    <!-- Loading state -->
+    <div class="loading-screen" x-show="loading" x-transition.opacity>
+        <div class="loading-pulse"></div>
+        <p class="loading-text">Loading duplicate sets&hellip;</p>
+    </div>
+
+    <!-- Main app (hidden while loading) -->
+    <template x-if="!loading">
+        <div class="shell" x-show="!loading" x-transition.opacity>
+
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <h1 class="wordmark">imagededup</h1>
+                </div>
+                <div class="header-center">
+                    <span class="set-counter mono" x-text="'Set ' + progress"></span>
+                </div>
+                <div class="header-right">
+                    <span class="badge-summary mono" x-text="totalGroups + ' sets found'"></span>
+                </div>
+            </header>
+
+            <!-- Empty state -->
+            <div class="empty-state" x-show="totalGroups === 0">
+                <p>No duplicate sets to review.</p>
+            </div>
+
+            <!-- Gallery strip -->
+            <div class="gallery-strip" x-show="totalGroups > 0">
+                <div class="cards-row">
+                    <template x-for="(img, idx) in currentGroup.images" :key="img.path">
+                        <div
+                            class="card"
+                            :class="{ 'card--discarded': isDiscarded(img.path) }"
+                            @click="toggleDiscard(img.path)"
+                        >
+                            <!-- Image area -->
+                            <div class="card-image-wrap">
+                                <img
+                                    :src="'/images/' + img.path"
+                                    :alt="img.filename"
+                                    class="card-image"
+                                    loading="lazy"
+                                >
+                                <!-- Discard overlay -->
+                                <div class="discard-overlay" x-show="isDiscarded(img.path)" x-transition.opacity>
+                                    <svg class="discard-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                                        <line x1="6" y1="6" x2="18" y2="18"/>
+                                        <line x1="18" y1="6" x2="6" y2="18"/>
+                                    </svg>
+                                </div>
+                                <!-- Score badge -->
+                                <span class="score-pill mono" x-text="img.score.toFixed(1) + '%'"></span>
+                            </div>
+
+                            <!-- Metadata -->
+                            <div class="card-meta">
+                                <p class="card-filename mono" x-text="img.filename" :title="img.path"></p>
+                                <div class="card-details">
+                                    <span class="detail mono" x-text="formatSize(img.size_bytes)"></span>
+                                    <span class="detail-sep">&middot;</span>
+                                    <span class="detail mono" x-text="img.width + '×' + img.height"></span>
+                                </div>
+                                <div class="card-status">
+                                    <span class="status-badge status-badge--kept" x-show="!isDiscarded(img.path)">keep</span>
+                                    <span class="status-badge status-badge--discard" x-show="isDiscarded(img.path)">discard</span>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="nav-bar" x-show="totalGroups > 1">
+                <button
+                    class="nav-btn"
+                    :disabled="currentIndex === 0"
+                    @click="prev()"
+                >
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                    <span>Prev</span>
+                </button>
+
+                <div class="nav-pips">
+                    <template x-for="i in Math.min(totalGroups, 20)" :key="i">
+                        <span
+                            class="pip"
+                            :class="{ 'pip--active': (i - 1) === currentIndex }"
+                            @click="currentIndex = i - 1"
+                        ></span>
+                    </template>
+                    <span class="pip-overflow mono" x-show="totalGroups > 20" x-text="'…+' + (totalGroups - 20)"></span>
+                </div>
+
+                <button
+                    class="nav-btn"
+                    :disabled="currentIndex >= totalGroups - 1"
+                    @click="next()"
+                >
+                    <span>Next</span>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                </button>
+            </nav>
+
+            <!-- Keyboard hint -->
+            <footer class="footer">
+                <span class="footer-hint mono">Click image to toggle discard &middot; &larr;&rarr; to navigate</span>
+            </footer>
+        </div>
+    </template>
+</div>
+
+<script src="/static/app.js"></script>
+</body>
+</html>
