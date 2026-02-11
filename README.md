@@ -1,5 +1,5 @@
 <div align="center">
-  <h1>BalatroLLM</h1>
+  <h1>Imagededup UI</h1>
   <p align="center">
     <a href="https://github.com/S1M0N38/imagededup-ui/actions/workflows/code_quality.yml">
       <img alt="Run Tests badge" src="https://img.shields.io/github/actions/workflow/status/S1M0N38/imagededup-ui/code_quality.yml?style=for-the-badge&label=Tests"/>
