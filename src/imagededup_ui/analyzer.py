@@ -111,9 +111,9 @@ def normalize_score(raw_score: float, method: str) -> float:
         Normalized similarity percentage (0-100).
     """
     if method in HASH_METHODS:
-        return (64 - raw_score) / 64 * 100
+        return float((64 - raw_score) / 64 * 100)
     # CNN: cosine similarity
-    return (raw_score + 1) / 2 * 100
+    return float((raw_score + 1) / 2 * 100)
 
 
 def get_image_metadata(image_dir: Path, rel_path: str) -> dict:
