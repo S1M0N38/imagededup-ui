@@ -55,26 +55,14 @@
                             <div class="card-image-wrap">
                                 <img
                                     :src="'/images/' + img.path"
-                                    :alt="img.filename"
+                                    alt=""
                                     class="card-image"
-                                    loading="lazy"
                                 >
                                 <!-- Score badge -->
                                 <span class="score-pill mono" x-text="img.score.toFixed(1) + '%'"></span>
-                            </div>
-
-                            <!-- Metadata -->
-                            <div class="card-meta">
-                                <p class="card-filename mono" x-text="img.filename" :title="img.path"></p>
-                                <div class="card-details">
-                                    <span class="detail mono" x-text="formatSize(img.size_bytes)"></span>
-                                    <span class="detail-sep">&middot;</span>
-                                    <span class="detail mono" x-text="img.width + '×' + img.height"></span>
-                                </div>
-                                <div class="card-status">
-                                    <span class="status-badge status-badge--kept" x-show="!isDiscarded(img.path)">keep</span>
-                                    <span class="status-badge status-badge--discard" x-show="isDiscarded(img.path)">discard</span>
-                                </div>
+                                <!-- Status badge -->
+                                <span class="status-badge status-badge--kept" x-show="!isDiscarded(img.path)">keep</span>
+                                <span class="status-badge status-badge--discard" x-show="isDiscarded(img.path)">discard</span>
                             </div>
                         </div>
                     </template>
