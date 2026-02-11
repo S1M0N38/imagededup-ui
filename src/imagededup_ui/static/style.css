@@ -202,24 +202,6 @@ body {
     filter: grayscale(0.6) brightness(0.6);
 }
 
-/* --- Discard overlay ------------------------------------------- */
-.discard-overlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(255, 107, 90, 0.18);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    pointer-events: none;
-}
-
-.discard-x {
-    width: 64px;
-    height: 64px;
-    color: var(--accent);
-    filter: drop-shadow(0 2px 8px rgba(255, 107, 90, 0.4));
-}
-
 /* --- Score badge ----------------------------------------------- */
 .score-pill {
     position: absolute;
@@ -425,8 +407,4 @@ body {
         font-size: 0.7rem;
     }
 
-    .discard-x {
-        width: 40px;
-        height: 40px;
-    }
 }

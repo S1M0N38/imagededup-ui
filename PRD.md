@@ -120,7 +120,7 @@ Each image in a duplicate set shows its **maximum similarity score to any other 
 | Action | Behavior |
 |--------|----------|
 | Left-click on image | Toggle discard status (add/remove from `.imagededup.txt`) |
-| Discarded image | Shows red cross overlay |
+| Discarded image | Dimmed with reduced opacity |
 | Navigation between sets | Button-based (Previous/Next) |
 | Current position | Displayed as "5/42" (current set of total sets) |
 
