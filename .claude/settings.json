@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [],
+    "deny": [
+      "Edit(CHANGELOG.md)",
+      "Write(CHANGELOG.md)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "make quality"
+          }
+        ]
+      }
+    ]
+  }
+}
