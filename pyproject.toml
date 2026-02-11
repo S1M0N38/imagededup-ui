@@ -16,7 +16,10 @@ classifiers = [
   "Programming Language :: Python :: 3.14",
 ]
 
-dependencies = [  ]
+dependencies = [
+  "imagededup>=0.3.3.post2",
+  "tqdm>=4.67.3",
+]
 urls.Changelog = "https://github.com/S1M0N38/imagededup-ui/blob/main/CHANGELOG.md"
 urls.Homepage = "https://github.com/S1M0N38/imagededup-ui"
 urls.Issues = "https://github.com/S1M0N38/imagededup-ui/issues"
