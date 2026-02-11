@@ -63,6 +63,61 @@ def process(items: List[str]) -> Dict[str, int]:
     ...
 ```
 
+## Code Conventions
+
+### Logging
+
+Use the `logging` module with named loggers (one per module):
+
+```python
+import logging
+
+logger = logging.getLogger(__name__)
+
+def analyze(path: Path) -> None:
+    logger.info("Analyzing %s", path)
+    logger.warning("Skipping corrupted file: %s", file)
+```
+
+The CLI entry point configures the root logger level. Modules never call `logging.basicConfig()` or `print()` for operational output.
+
+### Error Handling
+
+- Raise specific, descriptive exceptions — not bare `Exception`.
+- Use built-in exceptions where appropriate (`ValueError`, `FileNotFoundError`, `OSError`).
+- Include context in messages: what failed and why.
+
+```python
+# Good
+raise ValueError(f"Unknown method '{method}', expected one of: {VALID_METHODS}")
+
+# Bad
+raise Exception("invalid method")
+```
+
+### Docstrings
+
+Use **Google-style** docstrings for all public functions, classes, and modules:
+
+```python
+def find_duplicates(image_dir: Path, method: str, threshold: float) -> dict[str, list[tuple[str, float]]]:
+    """Find duplicate images in a directory.
+
+    Args:
+        image_dir: Path to the directory containing images.
+        method: Deduplication method (phash, dhash, ahash, whash, cnn).
+        threshold: Similarity threshold (interpretation varies by method).
+
+    Returns:
+        Adjacency dict mapping each filename to a list of
+        (duplicate_filename, score) tuples.
+
+    Raises:
+        FileNotFoundError: If image_dir does not exist.
+        ValueError: If method is not recognized.
+    """
+```
+
 ## Commit Conventions
 
 ### Format
