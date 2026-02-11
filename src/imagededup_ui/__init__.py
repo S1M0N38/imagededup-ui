@@ -1,5 +1,5 @@
 """UI for image deduplication."""
 
+from imagededup_ui.cli import main
 
-def main() -> None:
-    print("Hello from imagededup-ui!")
+__all__ = ["main"]
