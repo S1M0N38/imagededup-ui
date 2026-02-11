@@ -277,7 +277,7 @@ sdist = { url = "https://files.pythonhosted.org/packages/5a/13/d66926f4af67f1895
 
 [[package]]
 name = "imagededup-ui"
-version = "0.0.1"
+version = "0.1.0"
 source = { editable = "." }
 dependencies = [
     { name = "imagededup" },
