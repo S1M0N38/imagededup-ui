@@ -12,7 +12,6 @@
     </a>
   </p>
   <div><img src="https://github.com/user-attachments/assets/a3cd3845-0214-4e78-8bbf-67b0f8e1d9eb" alt="imagededup-ui screenshot"></div>
-  <p><em>A simple UI for imagededup</em></p>
 </div>
 
 Assuming that you have [uv](https://docs.astral.sh/uv/) installed, simply run:
