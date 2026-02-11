@@ -16,7 +16,6 @@ imagededup-ui [options] [path/to/images]
 |------|-------------|---------|
 | `--method` | Deduplication method: `phash`, `dhash`, `ahash`, `whash`, `cnn` | `cnn` |
 | `--threshold` | Similarity threshold (varies by method) | Method-specific default |
-| `--force` | Re-analyze all images even if cached | `false` |
 | `--port` | Specific port for HTTP server | Auto-find free port |
 | `--no-browser` | Do not auto-open the browser | `false` |
 
@@ -31,7 +30,7 @@ imagededup-ui [options] [path/to/images]
 
 1. **Analysis Phase**: User runs `imagededup-ui /path/to/images`
 2. **Progress**: CLI shows progress using `tqdm` during image analysis
-3. **Caching**: Results are cached in `.imagededup/` directory for fast resume
+3. **Caching**: Results are saved in `.imagededup/` directory
 4. **Server Launch**: HTTP server starts on a free port; unless `--no-browser` is set, the default browser opens automatically. The URL is always printed to the terminal
 5. **Review**: User reviews duplicate sets in the browser and marks images to discard
 6. **Live Update**: Discard list is continuously updated in `.imagededup.txt`
@@ -73,10 +72,8 @@ On server start, if `.imagededup.txt` already exists, its entries are loaded and
 - Save artifacts to `.imagededup/`
 
 ### Subsequent Runs
-- Check if `.imagededup/` exists with matching method and threshold
-- If matches: skip analysis, use cached results
-- If method or threshold changed: re-analyze all images
-- If `--force`: re-analyze all images regardless of cache
+- Always re-analyze images (no cache-based skipping)
+- Results are saved to `.imagededup/` after each run
 
 ### Image Filtering
 - **Skip**: Hidden files/directories (starting with `.`)

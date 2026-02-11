@@ -1,7 +1,7 @@
 """CLI argument parsing and orchestration for imagededup-ui.
 
-Parses command-line flags, checks cache validity, runs analysis when
-needed, and hands off to the HTTP server for the review UI.
+Parses command-line flags, runs analysis, and hands off to the HTTP
+server for the review UI.
 """
 
 import argparse
@@ -45,11 +45,6 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         type=float,
         default=None,
         help="Similarity threshold (method-specific default)",
-    )
-    parser.add_argument(
-        "--force",
-        action="store_true",
-        help="Re-analyze even if cached",
     )
     parser.add_argument(
         "--port",
@@ -101,16 +96,12 @@ def main(argv: list[str] | None = None) -> None:
     )
 
     from imagededup_ui.analyzer import build_groups, encode, find_duplicates
-    from imagededup_ui.cache import is_cache_valid, load_cache, save_cache
+    from imagededup_ui.cache import save_cache
 
-    if not args.force and is_cache_valid(image_dir, method, threshold):
-        logger.info("Using cached results")
-        encodings, duplicates = load_cache(image_dir)
-    else:
-        logger.info("Analyzing images with method=%s threshold=%s", method, threshold)
-        encodings = encode(image_dir, method)
-        duplicates = find_duplicates(encodings, method, threshold)
-        save_cache(image_dir, method, threshold, encodings, duplicates)
+    logger.info("Analyzing images with method=%s threshold=%s", method, threshold)
+    encodings = encode(image_dir, method)
+    duplicates = find_duplicates(encodings, method, threshold)
+    save_cache(image_dir, method, threshold, encodings, duplicates)
 
     groups = build_groups(duplicates, method, image_dir)
 

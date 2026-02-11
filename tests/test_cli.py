@@ -14,7 +14,6 @@ class TestParseArgs:
         assert args.image_dir == Path(".")
         assert args.method == "cnn"
         assert args.threshold is None
-        assert args.force is False
         assert args.port is None
         assert args.no_browser is False
 
@@ -32,11 +31,6 @@ class TestParseArgs:
         """--threshold flag sets threshold as float."""
         args = parse_args(["--threshold", "5.5"])
         assert args.threshold == 5.5
-
-    def test_force_flag(self):
-        """--force sets force to True."""
-        args = parse_args(["--force"])
-        assert args.force is True
 
     def test_port_flag(self):
         """--port sets port as int."""
@@ -57,7 +51,6 @@ class TestParseArgs:
                 "dhash",
                 "--threshold",
                 "15",
-                "--force",
                 "--port",
                 "3000",
                 "--no-browser",
@@ -66,7 +59,6 @@ class TestParseArgs:
         assert args.image_dir == Path("/tmp/images")
         assert args.method == "dhash"
         assert args.threshold == 15.0
-        assert args.force is True
         assert args.port == 3000
         assert args.no_browser is True
 
